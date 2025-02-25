@@ -1,31 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({super.key});
 
   @override
-  State<Calculator> createState() {
-    return _CalculatorState();
-  }
+  State<Calculator> createState() => _CalculatorState();
 }
 
 class _CalculatorState extends State<Calculator> {
+  dynamic text = '0';
+  double numOne = 0;
+  double numTwo = 0;
+  String result = '';
+  String finalResult = '0';
+  String opr = '';
+  String preOpr = '';
+
   Widget calcButton(String btntxt, Color btncolor, Color txtcolor) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: () {
-          calculation(btntxt);
-        },
-        style: ElevatedButton.styleFrom(
-            backgroundColor: btncolor,
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(20)),
-        child: Text(
-          btntxt,
-          style: TextStyle(
-            fontSize: 35,
-            color: txtcolor,
+    return Padding(
+      padding: EdgeInsets.all(5.w), // Adds spacing between buttons
+      child: SizedBox(
+        width: 75.w, // Adjusted width for better spacing
+        height: 65.h, // Adjusted height for better spacing
+        child: ElevatedButton(
+          onPressed: () {
+            calculation(btntxt);
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: btncolor,
+              shape: const CircleBorder(),
+              padding: EdgeInsets.all(15.r),
+              overlayColor: Colors.white,
+              shadowColor: Colors.grey[700],
+              surfaceTintColor: Colors.grey[400]),
+          child: Text(
+            btntxt,
+            style: TextStyle(
+              fontSize: 30.sp,
+              color: txtcolor,
+            ),
           ),
         ),
       ),
@@ -37,185 +53,142 @@ class _CalculatorState extends State<Calculator> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text(
-          'Calculator',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(
+            const Icon(
+              FontAwesomeIcons.list,
+            ).icon,
+            color: Colors.orangeAccent,
+            size: 18.sp,
           ),
         ),
         backgroundColor: Colors.black,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            //Calculator Display
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    text,
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 100,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                //here buttons function will be called where we will pass some arguments
-                calcButton('AC', Colors.grey, Colors.black),
-                calcButton('+/-', Colors.grey, Colors.black),
-                calcButton('%', Colors.grey, Colors.black),
-                calcButton('/', const Color(0xFFFFA000), Colors.white),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // same as above we will make more rows in similar way
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                calcButton('7', const Color(0xFF303030), Colors.white),
-                calcButton('8', const Color(0xFF303030), Colors.white),
-                calcButton('9', const Color(0xFF303030), Colors.white),
-                calcButton('x', const Color(0xFFFFA000), Colors.white),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                calcButton('4', const Color(0xFF303030), Colors.white),
-                calcButton('5', const Color(0xFF303030), Colors.white),
-                calcButton('6', const Color(0xFF303030), Colors.white),
-                calcButton('-', const Color(0xFFFFA000), Colors.white),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                calcButton('1', const Color(0xFF303030), Colors.white),
-                calcButton('2', const Color(0xFF303030), Colors.white),
-                calcButton('3', const Color(0xFF303030), Colors.white),
-                calcButton('+', const Color(0xFFFFA000), Colors.white),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // now last row is different as it has 0 Button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                //this is Button '0'
-                const SizedBox(width: 50),
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      calculation('0');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(34, 20, 128, 20),
-                      backgroundColor: const Color(0xFF303030),
-                      shape: const StadiumBorder(),
-                    ),
-                    child: const Text(
-                      "0",
-                      style: TextStyle(
-                        fontSize: 35,
-                        color: Colors.white,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    child: Padding(
+                      padding: EdgeInsets.all(5.r),
+                      child: Text(
+                        text,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 65.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 80),
-                calcButton('.', const Color(0xFF303030), Colors.white),
-                const SizedBox(width: 80),
-                calcButton('=', const Color(0xFFFFA000), Colors.white),
               ],
             ),
-            const SizedBox(height: 10),
+            for (var row in [
+              ['AC', '+/-', '%', '÷'],
+              ['7', '8', '9', 'x'],
+              ['4', '5', '6', '-'],
+              ['1', '2', '3', '+']
+            ])
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: row
+                    .map((btn) => calcButton(
+                          btn,
+                          btn == '÷' || btn == 'x' || btn == '-' || btn == '+'
+                              ? Colors.orange
+                              : (btn == 'AC' || btn == '+/-' || btn == '%')
+                                  ? Colors.grey[600]! // Light grey color
+                                  : Colors.grey[850]!,
+                          Colors.white,
+                        ))
+                    .toList(),
+              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Blank Circle Button
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(5.r),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[850],
+                        shape: const CircleBorder(),
+                        padding: EdgeInsets.all(15.r),
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: FaIcon(
+                          FontAwesomeIcons.calculator,
+                          size: 30.sp,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.all(5.r),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        calculation('0');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[850],
+                        shape: const CircleBorder(),
+                        padding: EdgeInsets.all(15.r),
+                      ),
+                      child: Text(
+                        "0",
+                        style: TextStyle(
+                          fontSize: 30.sp,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                calcButton('.', Colors.grey[850]!, Colors.white),
+                calcButton('=', Colors.orange, Colors.white),
+              ],
+            ),
+            SizedBox(height: 10.h),
           ],
         ),
       ),
     );
   }
 
-  // here we will write caculator logic for the app
+  // Function to perform calculations
 
-  dynamic text = '0';
-  double numOne = 0;
-  double numTwo = 0;
-
-  dynamic result = '';
-  dynamic finalResult = '';
-  dynamic opr = '';
-  dynamic preOpr = '';
-  void calculation(btnText) {
+  void calculation(String btnText) {
     if (btnText == 'AC') {
-      text = '0';
-      numOne = 0;
-      numTwo = 0;
-      result = '';
-      finalResult = '0';
-      opr = '';
-      preOpr = '';
-    } else if (opr == '=' && btnText == '=') {
-      if (preOpr == '+') {
-        finalResult = add();
-      } else if (preOpr == '-') {
-        finalResult = sub();
-      } else if (preOpr == 'x') {
-        finalResult = mul();
-      } else if (preOpr == '/') {
-        finalResult = div();
-      }
-    } else if (btnText == '+' ||
-        btnText == '-' ||
-        btnText == 'x' ||
-        btnText == '/' ||
-        btnText == '=') {
-      if (numOne == 0) {
-        numOne = double.parse(result);
-      } else {
-        numTwo = double.parse(result);
-      }
-
-      if (opr == '+') {
-        finalResult = add();
-      } else if (opr == '-') {
-        finalResult = sub();
-      } else if (opr == 'x') {
-        finalResult = mul();
-      } else if (opr == '/') {
-        finalResult = div();
-      }
-      preOpr = opr;
-      opr = btnText;
-      result = '';
+      resetCalculator();
     } else if (btnText == '%') {
-      result = numOne / 100;
-      finalResult = doesContainDecimal(result);
-    } else if (btnText == '.') {
-      if (!result.toString().contains('.')) {
-        result = result.toString() + '.';
-      }
-      finalResult = result;
+      percentageCalculation();
     } else if (btnText == '+/-') {
-      result.toString().startsWith('-')
-          ? result = result.toString().substring(1)
-          : result = '-' + result.toString();
-      finalResult = result;
+      toggleSign();
+    } else if (btnText == '.') {
+      addDecimalPoint();
+    } else if (btnText == '=' || isOperator(btnText)) {
+      processOperator(btnText);
     } else {
-      result = result + btnText;
-      finalResult = result;
+      processNumber(btnText);
     }
 
     setState(() {
@@ -223,35 +196,109 @@ class _CalculatorState extends State<Calculator> {
     });
   }
 
-  String add() {
-    result = (numOne + numTwo).toString();
-    numOne = double.parse(result);
-    return doesContainDecimal(result);
+  void resetCalculator() {
+    text = '0';
+    numOne = 0;
+    numTwo = 0;
+    result = '';
+    finalResult = '0';
+    opr = '';
+    preOpr = '';
   }
 
-  String sub() {
-    result = (numOne - numTwo).toString();
-    numOne = double.parse(result);
-    return doesContainDecimal(result);
+  void percentageCalculation() {
+    if (result.isNotEmpty) {
+      result = (double.parse(result) / 100).toString();
+      finalResult = doesContainDecimal(result);
+    }
   }
 
-  String mul() {
-    result = (numOne * numTwo).toString();
-    numOne = double.parse(result);
-    return doesContainDecimal(result);
+  void toggleSign() {
+    if (result.isNotEmpty && result != '0') {
+      result = result.startsWith('-') ? result.substring(1) : '-$result';
+      finalResult = result;
+    }
   }
 
-  String div() {
-    result = (numOne / numTwo).toString();
-    numOne = double.parse(result);
-    return doesContainDecimal(result);
+  void addDecimalPoint() {
+    if (!result.contains('.')) {
+      result += '.';
+      finalResult = result;
+    }
   }
 
-  String doesContainDecimal(dynamic result) {
-    if (result.toString().contains('.')) {
-      List<String> splitDecimal = result.toString().split('.');
-      if (!(int.parse(splitDecimal[1]) > 0))
-        return result = splitDecimal[0].toString();
+  bool isOperator(String value) {
+    return value == '+' || value == '-' || value == 'x' || value == '/';
+  }
+
+  String formatNumber(double num) {
+    return num % 1 == 0 ? num.toInt().toString() : num.toString();
+  }
+
+  void processOperator(String btnText) {
+    if (result.isNotEmpty) {
+      numTwo = double.parse(result); // Capture the second number
+    }
+
+    if (btnText == '=') {
+      calculateFinalResult(); // Compute result
+    } else {
+      if (result.isNotEmpty) {
+        numOne = double.parse(result);
+      }
+      opr = btnText;
+      finalResult = '${formatNumber(numOne)} $opr'; // Display expression
+      result = ''; // Reset result for next input
+    }
+
+    setState(() {
+      text = finalResult;
+    });
+  }
+
+  void processNumber(String btnText) {
+    // If an operator was selected, append the new number instead of replacing everything
+    if (opr.isNotEmpty) {
+      result += btnText;
+      finalResult = '${formatNumber(numOne)} $opr $btnText';
+    } else {
+      result += btnText;
+      finalResult = result;
+    }
+  }
+
+  void calculateFinalResult() {
+    if (result.isEmpty || opr.isEmpty) return;
+
+    numTwo = double.parse(result);
+
+    switch (opr) {
+      case '+':
+        finalResult = (numOne + numTwo).toString();
+        break;
+      case '-':
+        finalResult = (numOne - numTwo).toString();
+        break;
+      case 'x':
+        finalResult = (numOne * numTwo).toString();
+        break;
+      case '/':
+        finalResult = numTwo == 0 ? "Error" : (numOne / numTwo).toString();
+        break;
+    }
+
+    finalResult = doesContainDecimal(finalResult);
+    numOne = double.parse(finalResult);
+    result = '';
+    opr = '';
+  }
+
+  String doesContainDecimal(String result) {
+    if (result.contains('.')) {
+      List<String> splitDecimal = result.split('.');
+      if (int.parse(splitDecimal[1]) == 0) {
+        return splitDecimal[0];
+      }
     }
     return result;
   }
