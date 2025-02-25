@@ -5,9 +5,11 @@ A simple and elegant iOS-style calculator built using **Flutter**. The app follo
 
 ## 📱 Screenshots
 
-<img src="app_screenshots/screenshot_one.png" width="30%"> 
-<img src="app_screenshots/screenshot_two.png" width="30%"> 
-<img src="app_screenshots/screenshot_three.png" width="30%">
+<p align="center">
+   <img src="app_screenshots/screenshot_one.png" width="30%"> 
+   <img src="app_screenshots/screenshot_two.png" width="30%"> 
+   <img src="app_screenshots/screenshot_three.png" width="30%">
+</p>
 
 
 ## ✨ Features
